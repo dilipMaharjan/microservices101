@@ -1,10 +1,5 @@
 package com.dmaharjan.dilipbeerservice.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +20,8 @@ import com.dmaharjan.dilipbeerservice.web.model.BeerStyleEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BeerController.class)
 @ComponentScan(basePackages = "com.dmaharjan.dilipbeerservice.web.mappers")
@@ -43,7 +40,7 @@ public class BeerControllerTest
     void getBeer() throws Exception
     {
         given(beerRepository.findById(any())).willReturn(Optional.of(Beer.builder().build()));
-        mockMvc.perform(get("/api/v1/beers/" + UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/beers/{beerId}", UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
