@@ -1,8 +1,5 @@
 package com.dmaharjan.dilipbrewery.web.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
-import java.awt.PageAttributes.MediaType;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
