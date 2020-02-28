@@ -14,31 +14,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dmaharjan.dilipbeerservice.repositories.BeerRepository;
+import com.dmaharjan.dilipbeerservice.web.mappers.BeerMapper;
 import com.dmaharjan.dilipbeerservice.web.model.BeerDto;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author dmaharjan
  */
 
 @RequestMapping("/api/v1/beers")
+@RequiredArgsConstructor
 @RestController
-public class BeerController {
+public class BeerController
+{
+    private final BeerMapper beerMapper;
 
-	@GetMapping("/{beerId}")
-	public ResponseEntity<BeerDto> getBeer(
-			@PathVariable("beerId") UUID beerId) {
-		return new ResponseEntity<BeerDto>(BeerDto.builder().build(),
-				HttpStatus.OK);
-	}
+    private final BeerRepository beerRepository;
 
-	@PostMapping
-	public ResponseEntity<Object> saveBeer(@Valid @RequestBody BeerDto beerDto) {
-		return new ResponseEntity<Object>(HttpStatus.CREATED);
-	}
-	@PutMapping("/{beerId}")
-	public ResponseEntity<Object> updateBeer(
-			@PathVariable("beerId") UUID beerId,
-			@Valid @RequestBody BeerDto beerDto) {
-		return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
-	}
+    @GetMapping("/{beerId}")
+    public ResponseEntity<BeerDto> getBeer(@PathVariable("beerId") UUID beerId)
+    {
+        return new ResponseEntity<BeerDto>(beerMapper.beerToBeerDto(beerRepository.findById(beerId).get()),
+            HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> saveBeer(@Valid @RequestBody BeerDto beerDto)
+    {
+        beerRepository.save(beerMapper.beerDtoToBeer(beerDto));
+        return new ResponseEntity<Object>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{beerId}")
+    public ResponseEntity<Object> updateBeer(@PathVariable("beerId") UUID beerId, @Valid @RequestBody BeerDto beerDto)
+    {
+        beerRepository.findById(beerId).ifPresent(beer -> {
+            beer.setBeerName(beerDto.getBeerName());
+            beer.setBeerStyle(beerDto.getBeerStyle().name());
+            beer.setPrice(beerDto.getPrice());
+            beer.setUpc(beerDto.getUpc());
+            beerRepository.save(beer);
+        });
+        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+    }
 }

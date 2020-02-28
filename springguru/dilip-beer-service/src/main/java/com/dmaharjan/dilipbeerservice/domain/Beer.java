@@ -15,6 +15,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.dmaharjan.dilipbeerservice.web.model.BeerStyleEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,33 +35,32 @@ import lombok.Setter;
 @Entity
 public class Beer {
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    private UUID id;
+	@Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Type(type = "org.hibernate.type.UUIDCharType")
+	@Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+	private UUID id;
 
-    @Version
-    private Long version;
+	@Version
+	private Long version;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp createdDate;
+	@CreationTimestamp
+	@Column(updatable = false)
+	private Timestamp createdDate;
 
-    @UpdateTimestamp
-    private Timestamp lastModifiedDate;
+	@UpdateTimestamp
+	private Timestamp lastModifiedDate;
 
-    private String beerName;
-    private String beerStyle;
+	private String beerName;
+	private String beerStyle;
 
-    @Column(unique = true)
-    private String upc;
+	@Column(unique = true)
+	private Long upc;
 
-    private BigDecimal price;
+	private BigDecimal price;
 
-    private Integer minOnHand;
-    private Integer quantityToBrew;
-
+	private Integer minOnHand;
+	private Integer quantityToBrew;
 
 }
